@@ -1,0 +1,10 @@
+{% extends 'super_template.html' %}
+
+{% load super_module %}
+
+{% url path.to.view arg arg2 %}
+{% url path.to.view arg arg2 %}
+{% url myapp:view-name %}
+{% url path.to.view as the_url %}
+{% url path.to.view arg arg2 as the_url %}
+{% url app_views.client client.id %}
