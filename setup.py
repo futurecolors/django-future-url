@@ -15,7 +15,7 @@ setup(
     packages=['django-future-url'],
     url='https://github.com/futurecolors/django-future-url/',
     description="Migration tool for django 1.4, fixs url template tag deprecation warnings.",
-    long_description=read(os.path.join(os.path.dirname(__file__), 'README.rst')),
+    long_description=read(os.path.join(os.path.dirname(__file__), 'README.md')),
     license='MIT',
     scripts=['django-future-url/django-make-future-url.py'],
     classifiers=[
