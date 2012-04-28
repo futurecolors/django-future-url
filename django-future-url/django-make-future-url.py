@@ -157,7 +157,7 @@ def process_load_tag(html):
     if r_extends_finder.search(html):
         return r_load_extends_pattern.sub(r_load_extends_replace, html, count=1)
     else:
-        return u"{load_tag}\n{html}".format(
+        return "{load_tag}\n{html}".format(
             load_tag=load_tag,
             html=html,
         )
