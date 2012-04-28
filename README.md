@@ -11,7 +11,7 @@ If you use old style url tags in django 1.4 you will see that:
 
 * Finds all *.html, *.txt files.
 * Replaces all old style “url” tags.
-* Inserts “{% load url from suture %}” when it's needed.
+* Inserts “{% load url from future %}” when it's needed.
 
 
 ## Installation
