@@ -179,6 +179,9 @@ def check_comma_in_attributes(html):
 def has_deprecated_tag(html):
     """ Проверка на наличие НЕ «future» url тега в тексте. """
 
+    if load_tag in html:
+        # File is already up-to-date
+        return False
     return (
         r_depr_url_finder.search(html)
         or (
