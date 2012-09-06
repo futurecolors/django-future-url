@@ -1,2 +1,4 @@
 .DS_STORE
 *.pyc
+.idea
+build
