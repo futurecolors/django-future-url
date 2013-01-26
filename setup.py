@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
-import codecs
 import os
-from distutils.core import setup
+import codecs
+from setuptools import setup, find_packages
+
+import django_future_url
 
 read = lambda filepath: codecs.open(filepath, 'r', 'utf-8').read()
 
-version = '0.2dev'
-
 setup(
     name="django-future-url",
-    version=version,
+    version=django_future_url.__version__,
     author='Vitaly Olevinsky',
     author_email='olevinsky.v.s@gmail.com',
-    packages=['django-future-url'],
+    packages=find_packages(),
     url='https://github.com/futurecolors/django-future-url/',
     description="Migration tool for django 1.4, fixes url template tag deprecation warnings.",
     long_description=read(os.path.join(os.path.dirname(__file__), 'README.md')),
     license='MIT',
-    scripts=['django-future-url/django-make-future-url.py'],
+    scripts=['django_make_future_url/django_make_future_url.py'],
+    test_suite='django_future_url.test',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Framework :: Django',

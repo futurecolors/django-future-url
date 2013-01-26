@@ -35,8 +35,7 @@ https://docs.djangoproject.com/en/1.4/ref/templates/builtins/#url
 import re
 import os
 from optparse import OptionParser
-
-version = __import__('django-future-url').get_version()
+import django_future_url
 
 CURRENT_PATH = os.path.abspath('.')
 template_files = []
@@ -74,7 +73,7 @@ r_load_extends_pattern = re.compile(
 r_load_extends_replace = """\g<template_head>\n\n%s\n""" % load_tag
 
 # Options
-parser = OptionParser("usage: %prog [options]", version='%prog ' + version)
+parser = OptionParser("usage: %prog [options]", version='%prog ' + django_future_url.__version__)
 parser.add_option(
     "-v", "--verbose",
     action="store_true",
@@ -104,29 +103,33 @@ def make_me_magic():
     for file_path in template_files:
         with open(file_path, 'r+') as t_file:
             file_content = t_file.read()
+            print(file_content)
+            new_content = parse_file(file_content)
+            if new_content != file_content and not getattr(options, 'dryrun', True):
+                t_file.seek(0)
+                t_file.write(new_content)
+                message("File updated")
+            message('\n')
 
-            # Checking for presence of old-style tags and absence of load url from future
-            if has_deprecated_tag(file_content):
-                print file_path
 
-                # Handle files with deprecated url tags
-                if r_depr_url_finder.search(file_content):
-                    # Comma separated attributes are no longer supported in load from future
-                    if check_comma_in_attributes(file_content):
-                        message("Comma separated attribudes in “future” url tag are not supported.")
-                    file_content = process_url_tag(file_content)
+def parse_file(file_content):
+    # Checking for presence of old-style tags and absence of load url from future
+    if has_deprecated_tag(file_content):
+        # print t_file.name
 
-                # Check if load url form future is present and add if necessary
-                if r_url_finder.search(file_content) and not r_load_finder.search(file_content):
-                    file_content = process_load_tag(file_content)
-                    message("Added {% load url from future %}")
+        # Handle files with deprecated url tags
+        if r_depr_url_finder.search(file_content):
+            # Comma separated attributes are no longer supported in load from future
+            if check_comma_in_attributes(file_content):
+                message("Comma separated attribudes in “future” url tag are not supported.")
+            file_content = process_url_tag(file_content)
 
-                if not getattr(options, 'dryrun', True):
-                    t_file.seek(0)
-                    t_file.write(file_content)
-                    message("File updated")
+        # Check if load url form future is present and add if necessary
+        if r_url_finder.search(file_content) and not r_load_finder.search(file_content):
+            file_content = process_load_tag(file_content)
+            message("Added {% load url from future %}")
 
-                message('\n')
+    return file_content
 
 
 def url_replacer(match):
