@@ -5,7 +5,7 @@ from distutils.core import setup
 
 read = lambda filepath: codecs.open(filepath, 'r', 'utf-8').read()
 
-version = '0.1'
+version = '0.2dev'
 
 setup(
     name="django-future-url",
@@ -14,7 +14,7 @@ setup(
     author_email='olevinsky.v.s@gmail.com',
     packages=['django-future-url'],
     url='https://github.com/futurecolors/django-future-url/',
-    description="Migration tool for django 1.4, fixs url template tag deprecation warnings.",
+    description="Migration tool for django 1.4, fixes url template tag deprecation warnings.",
     long_description=read(os.path.join(os.path.dirname(__file__), 'README.md')),
     license='MIT',
     scripts=['django-future-url/django-make-future-url.py'],
