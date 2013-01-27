@@ -1,5 +1,6 @@
 import codecs
 import os
+import subprocess
 import unittest
 from django_future_url.core import parse_file
 
@@ -9,7 +10,7 @@ class ModernizeUrlTagTestCase(unittest.TestCase):
     def assertTemplateFixed(self, template_name):
         base = os.path.abspath(os.path.dirname(__file__))
         input_filepath = os.path.join(base, 'examples', template_name + '.html')
-        expected_filepath = os.path.join(base, 'examples', template_name + '.fixed.html')
+        expected_filepath = os.path.join(base, 'expected', template_name + '.fixed.html')
 
         output = parse_file(codecs.open(input_filepath, 'r', 'utf-8').read())
         expected_output = codecs.open(expected_filepath, 'r', 'utf-8').read()
@@ -32,3 +33,9 @@ class SimpleTest(ModernizeUrlTagTestCase):
 
     def test_should_not_be_upgraded(self):
         self.assertTemplateFixed('should_not_be_upgraded')
+
+
+class IntegrationTest(unittest.TestCase):
+
+    def test_cram(self):
+        self.assertEqual(0, subprocess.call(['cram', 'django_future_url/test/cram']))
