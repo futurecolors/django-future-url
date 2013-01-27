@@ -30,6 +30,7 @@ https://docs.djangoproject.com/en/1.4/ref/templates/builtins/#url
     {% url url_name client.id %}
     {% endwith %}
 """
+from __future__ import unicode_literals
 
 import re
 import os
@@ -38,24 +39,23 @@ import logging
 log = logging.getLogger(__name__)
 
 CURRENT_PATH = os.path.abspath('.')
-template_files = []
 load_tag = "{% load url from future %}"
 file_formats = ['.html', '.txt']
 
 re_flags = re.I | re.X | re.U
 
 # Deprecated url tag
-r_depr_url_finder = re.compile(ur" {% \s* url \s+ [^\"\'\s]+ \s+ ", re_flags)
+r_depr_url_finder = re.compile(r" {% \s* url \s+ [^\"\'\s]+ \s+ ", re_flags)
 
 # And url tag
-r_url_finder = re.compile(ur"{% \s* url \s+ ", re_flags)
+r_url_finder = re.compile(r"{% \s* url \s+ ", re_flags)
 # {% load url from future %}
-r_load_finder = re.compile(ur" {% \s* load \s+ url \s+ from \s+ future \s* %} ", re_flags)
+r_load_finder = re.compile(r" {% \s* load \s+ url \s+ from \s+ future \s* %} ", re_flags)
 # {% extends ... %} tag
-r_extends_finder = re.compile(ur"{% \s* extends \s* \S+ \s* %}", re_flags)
+r_extends_finder = re.compile(r"{% \s* extends \s* \S+ \s* %}", re_flags)
 
 # Modernizing url tag replace pattern
-r_url_pattern = re.compile(ur"""
+r_url_pattern = re.compile(r"""
     (?P<before> {% \s*
         url \s+ )
         (?P<name> \S+ )
@@ -65,7 +65,7 @@ r_url_pattern = re.compile(ur"""
 
 # Add load from future after extends
 r_load_extends_pattern = re.compile(
-    ur"(?P<template_head> [\s\S]* {% \s* extends \s* \S+ \s* %} )",
+    r"(?P<template_head> [\s\S]* {% \s* extends \s* \S+ \s* %} )",
     re_flags | re.M,
 )
 
@@ -79,9 +79,7 @@ def make_me_magic(write):
     Here we find templates, replace old-style url tags and add future import where necessary.
     """
     # Search for files with appropriate extensions.
-    os.path.walk(CURRENT_PATH, search_template_files, template_files)
-
-    for file_path in template_files:
+    for file_path in find_files(os.walk(CURRENT_PATH)):
         with open(file_path, 'r+') as t_file:
             log.info(file_path.replace(CURRENT_PATH + '/', ''))
             file_content = t_file.read()
@@ -92,6 +90,12 @@ def make_me_magic(write):
                 log.info("File updated")
             log.debug('\n')
     log.info('Finished')
+
+
+def find_files(paths):
+    for dirpath, _, filenames in paths:
+        for path in search_template_files(dirpath, filenames):
+            yield path
 
 
 def parse_file(file_content):
@@ -160,10 +164,9 @@ def has_deprecated_tag(html):
     return not has_load_tag and (r_depr_url_finder.search(html) or r_url_finder.search(html))
 
 
-def search_template_files(template_files, dirname, fnames):
+def search_template_files(dirname, fnames):
     """ Search for suitable files """
 
     for file_name in fnames:
         if os.path.splitext(file_name)[1] in file_formats:
-            file_path = os.path.join(dirname, file_name)
-            template_files.append(file_path)
+            yield os.path.join(dirname, file_name)
