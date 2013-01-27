@@ -28,7 +28,7 @@ https://docs.djangoproject.com/en/1.4/ref/templates/builtins/#url
 
     {% with url_name="client-detail-view" %}
     {% url url_name client.id %}
-    {% endwith %}»
+    {% endwith %}
 """
 
 import re
@@ -73,7 +73,7 @@ r_load_extends_pattern = re.compile(
 r_load_extends_replace = """\g<template_head>\n\n%s\n""" % load_tag
 
 
-def make_me_magic(dry_run):
+def make_me_magic(write):
     """ Main script.
 
     Here we find templates, replace old-style url tags and add future import where necessary.
@@ -83,14 +83,15 @@ def make_me_magic(dry_run):
 
     for file_path in template_files:
         with open(file_path, 'r+') as t_file:
-            log.debug(file_path)
+            log.info(file_path.replace(CURRENT_PATH + '/', ''))
             file_content = t_file.read()
             new_content = parse_file(file_content)
-            if new_content != file_content and not dry_run:
+            if new_content != file_content and write:
                 t_file.seek(0)
                 t_file.write(new_content)
-                log.debug("File updated")
+                log.info("File updated")
             log.debug('\n')
+    log.info('Finished')
 
 
 def parse_file(file_content):
@@ -120,7 +121,7 @@ def url_replacer(match):
     if ',' in match.group('attrs'):
         matches['attrs'] = re.sub('\s*,\s*', ' ', match.group('attrs'))
     repl = "{before}'{name}'{attrs}{after}".format(**matches)
-    logging.debug(u"replaced: {0} -> {1}".format(match.group(0), repl))
+    logging.debug("replaced: {0} -> {1}".format(match.group(0), repl))
     return repl
 
 

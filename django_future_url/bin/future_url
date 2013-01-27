@@ -3,13 +3,13 @@
 Django future url.
 
 Usage:
-  future_url
+  future_url [options]
   future_url -h | --help
   future_url --version
 
 Options:
-  -D --dry-run  Only shows changes to be made without actually modifying files.
-  -v --verbose  Print status messages to stdout.
+  -w --write    Actually make replacements.
+  -v --verbose  Print extra status messages to stdout.
   -h --help     Show this screen.
   --version     Show version.
 """
@@ -25,6 +25,6 @@ if __name__ == '__main__':
 
     # Set up logging handler
     level = logging.DEBUG if arguments['--verbose'] else logging.INFO
-    logging.basicConfig(format='%(name)s: %(message)s', level=level)
+    logging.basicConfig(format='%(message)s', level=level)
 
-    make_me_magic(dry_run=arguments['--dry-run'])
+    make_me_magic(write=arguments['--write'])
