@@ -17,7 +17,12 @@ setup(
     description="Migration tool for django 1.4, fixes url template tag deprecation warnings.",
     long_description=read(os.path.join(os.path.dirname(__file__), 'README.md')),
     license='MIT',
-    scripts=['django_make_future_url/django_make_future_url.py'],
+    install_requires=['docopt'],
+    entry_points={
+        'console_scripts': [
+            'future_url = django_future_url.bin:main'
+        ]
+    },
     test_suite='django_future_url.test',
     classifiers=[
         'Development Status :: 4 - Beta',

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # coding: utf-8
 
 """ Searches for templates in current directory recursively and
@@ -34,8 +33,9 @@ https://docs.djangoproject.com/en/1.4/ref/templates/builtins/#url
 
 import re
 import os
-from optparse import OptionParser
-import django_future_url
+import logging
+
+log = logging.getLogger(__name__)
 
 CURRENT_PATH = os.path.abspath('.')
 template_files = []
@@ -72,44 +72,25 @@ r_load_extends_pattern = re.compile(
 # Adding load tag pattern
 r_load_extends_replace = """\g<template_head>\n\n%s\n""" % load_tag
 
-# Options
-parser = OptionParser("usage: %prog [options]", version='%prog ' + django_future_url.__version__)
-parser.add_option(
-    "-v", "--verbose",
-    action="store_true",
-    dest="verbose",
-    default=False,
-    help="Print status messages to stdout"
-)
-parser.add_option(
-    "-D", "--dry-run",
-    dest="dryrun",
-    action="store_true",
-    default=False,
-    help='Only shows changes to be made without actually modifying files'
-)
-(options, args) = parser.parse_args()
 
-
-def make_me_magic():
+def make_me_magic(dry_run):
     """ Main script.
 
     Here we find templates, replace old-style url tags and add future import where necessary.
     """
-
     # Search for files with appropriate extensions.
     os.path.walk(CURRENT_PATH, search_template_files, template_files)
 
     for file_path in template_files:
         with open(file_path, 'r+') as t_file:
+            log.debug(file_path)
             file_content = t_file.read()
-            print(file_content)
             new_content = parse_file(file_content)
-            if new_content != file_content and not getattr(options, 'dryrun', True):
+            if new_content != file_content and not dry_run:
                 t_file.seek(0)
                 t_file.write(new_content)
-                message("File updated")
-            message('\n')
+                log.debug("File updated")
+            log.debug('\n')
 
 
 def parse_file(file_content):
@@ -121,13 +102,13 @@ def parse_file(file_content):
         if r_depr_url_finder.search(file_content):
             # Comma separated attributes are no longer supported in load from future
             if check_comma_in_attributes(file_content):
-                message("Comma separated attribudes in “future” url tag are not supported.")
+                log.info("Comma separated attributes in “future” url tag are not supported.")
             file_content = process_url_tag(file_content)
 
         # Check if load url form future is present and add if necessary
         if r_url_finder.search(file_content) and not r_load_finder.search(file_content):
             file_content = process_load_tag(file_content)
-            message("Added {% load url from future %}")
+            log.debug("Added {% load url from future %}")
 
     return file_content
 
@@ -139,7 +120,7 @@ def url_replacer(match):
     if ',' in match.group('attrs'):
         matches['attrs'] = re.sub('\s*,\s*', ' ', match.group('attrs'))
     repl = "{before}'{name}'{attrs}{after}".format(**matches)
-    message(u"replaced: {0} -> {1}".format(match.group(0), repl))
+    logging.debug(u"replaced: {0} -> {1}".format(match.group(0), repl))
     return repl
 
 
@@ -185,12 +166,3 @@ def search_template_files(template_files, dirname, fnames):
         if os.path.splitext(file_name)[1] in file_formats:
             file_path = os.path.join(dirname, file_name)
             template_files.append(file_path)
-
-
-def message(txt):
-    if getattr(options, 'verbose', False) or getattr(options, 'dryrun', False):
-        print txt
-
-
-if __name__ == '__main__':
-    make_me_magic()

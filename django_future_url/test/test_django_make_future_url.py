@@ -1,7 +1,7 @@
 import codecs
 import os
 import unittest
-from django_future_url.django_make_future_url import parse_file
+from django_future_url.core import parse_file
 
 
 class ModernizeUrlTagTestCase(unittest.TestCase):
