@@ -21,28 +21,32 @@ Installation
 ------------
 
 ::
-    python setup.py install
+    pip install django-future-url
 
 Usage
 -----
 
 ::
     cd ~/projects/my_django_14_project/
-    django-make-future-url.py
+    future_url --verbose
 
-It will update all templates in directory
+It will show needed midification for all templates in directory
 “~/projects/my\_django\_14\_project/” and subdirectories.
 
+::
+    future_url --write
+
+It will modernize all your templates in place (see above).
 
 Options
 ~~~~~~~
 
-*You can use ``django-make-future-url.py --help`` for help.*
+*You can use ``future_url --help`` for help.*
 
 Only shows changes to be made without actually modifying files:
-``bash django-make-future-url.py --dry-run``
+``$ future_url``
 
-Verbose output: ``bash django-make-future-url.py --verbose``
+Verbose output: ``$ future_url --verbose``
 
 Example
 -------
@@ -56,7 +60,7 @@ Example
     {% url   path.to.view arg arg2   as   the_url %}
     {%url app_views.client client.id%}
 
-``django-make-future-url.py``
+``future_url --write``
 
 ``cat ./template1``
 
@@ -66,3 +70,8 @@ Example
     {%url 'myapp:view-name' %}
     {% url 'path.to.view' as the_url%}
     {% url   'path.to.view' arg arg2   as   the_url %}
+
+Tests
+-----
+
+Install ``cram`` and run ``python setup.py test``
