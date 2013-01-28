@@ -38,4 +38,5 @@ class SimpleTest(ModernizeUrlTagTestCase):
 class IntegrationTest(unittest.TestCase):
 
     def test_cram(self):
-        self.assertEqual(0, subprocess.call(['cram', 'django_future_url/test/cram']))
+        base = os.path.abspath(os.path.dirname(__file__))
+        self.assertEqual(0, subprocess.call(['cram', os.path.join(base, 'cram')]))
