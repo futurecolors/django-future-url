@@ -2,6 +2,12 @@
 """
 Django future url.
 
+Migration tool for django 1.4, fixes url template tag deprecation warnings.
+
+    -  Finds all html``, txt files.
+    -  Replaces all old style url tags.
+    -  Inserts {% load url from future %} when it's needed.
+
 Usage:
   future_url [options]
   future_url -h | --help
@@ -21,7 +27,7 @@ from django_future_url.core import make_me_magic
 
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__, version='Django future url' + django_future_url.__version__)
+    arguments = docopt(__doc__, version='Django future url ' + django_future_url.__version__)
 
     # Set up logging handler
     level = logging.DEBUG if arguments['--verbose'] else logging.INFO

@@ -1,6 +1,9 @@
 django-future-url
 =================
 
+.. image:: https://travis-ci.org/futurecolors/django-future-url.png?branch=master
+        :target: https://travis-ci.org/futurecolors/django-future-url
+
 Migration tool for old style “url” tags.
 `“In Django 1.5, the behavior of the url template tag will change”`_
 
