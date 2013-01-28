@@ -15,7 +15,7 @@ Usage:
 
 Options:
   -w --write    Actually make replacements.
-  -v --verbose  Print extra status messages to stdout.
+  -q --quiet    Do not print anything to stdout.
   -h --help     Show this screen.
   --version     Show version.
 """
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     arguments = docopt(__doc__, version='Django future url ' + django_future_url.__version__)
 
     # Set up logging handler
-    level = logging.DEBUG if arguments['--verbose'] else logging.INFO
+    level = logging.CRITICAL if arguments['--quiet'] else logging.INFO
     logging.basicConfig(format='%(message)s', level=level)
 
     make_me_magic(write=arguments['--write'])

@@ -3,10 +3,11 @@ Initial setup:
   $ alias future_url="$TESTDIR/../../bin/future_url"
   $ cp -R $TESTDIR/../test_project $TMPDIR/test_project
 
-Test --write --verbose behavior:
+Test --write behavior:
 
   $ cd $TMPDIR/test_project
-  $ future_url --write --verbose
+  $ future_url --write
+  Files needing modification:
   template.html
       Proposed replace: {% url someview %} -> {% url 'someview' %}
       Need to add {% load url from future %}
@@ -16,6 +17,3 @@ Test --write --verbose behavior:
       Proposed replace: {% url path.to.view arg, arg2 %} -> {% url 'path.to.view' arg arg2 %}
       Need to add {% load url from future %}
       File updated
-
-
-

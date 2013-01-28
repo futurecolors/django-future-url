@@ -79,21 +79,28 @@ def make_me_magic(write):
     Here we find templates, replace old-style url tags and add future import where necessary.
     """
     # Search for files with appropriate extensions.
+    log.info('Files needing modification:')
+    found = False
     for file_path in find_files(os.walk(CURRENT_PATH)):
         with open(file_path, 'r+') as t_file:
             file_content = t_file.read()
             # Checking for presence of old-style tags and absence of load url from future
             if has_deprecated_tag(file_content):
+                found = True
                 log.info(file_path.replace(CURRENT_PATH + '/', ''))
                 new_content = parse_file(file_content)
 
                 if write:
                     t_file.seek(0)
                     t_file.write(new_content)
-                    log.info("    File updated")
+                    log.info('    File updated')
 
-    if not write:
-        log.info("No actual changes made")
+    if not found:
+        log.info('All files are up to date. Congrats!')
+    else:
+        if not write:
+            log.info('No actual changes made. Run future_url --write to fix files right now.')
+
 
 
 def find_files(paths):
@@ -115,7 +122,7 @@ def parse_file(file_content):
     # Check if load url form future is present and add if necessary
     if r_url_finder.search(file_content) and not r_load_finder.search(file_content):
         file_content = process_load_tag(file_content)
-        log.debug("    Need to add {% load url from future %}")
+        log.info("    Need to add {% load url from future %}")
 
     return file_content
 
@@ -127,7 +134,7 @@ def url_replacer(match):
     if ',' in match.group('attrs'):
         matches['attrs'] = re.sub('\s*,\s*', ' ', match.group('attrs'))
     repl = "{before}'{name}'{attrs}{after}".format(**matches)
-    logging.debug("    Proposed replace: {0} -> {1}".format(match.group(0), repl))
+    logging.info("    Proposed replace: {0} -> {1}".format(match.group(0), repl))
     return repl
 
 
