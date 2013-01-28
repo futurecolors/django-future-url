@@ -6,6 +6,7 @@ Changelog
 * Fixed setup.py to properly define runner
 * Added even more tests
 * Improved output
+* Made ``--verbose`` a default behavior
 
 
 0.2 (2013-01-27)
