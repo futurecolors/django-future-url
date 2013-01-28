@@ -1,9 +1,10 @@
 Changelog
 =========
 
-0.1 (2012-04-24)
-^^^^^^^^^^^^^^^^
-* Initial release
+0.2.1 (2013-01-28)
+^^^^^^^^^^^^^^^^^^
+* Fixed setup.py to properly define runner
+* Imroved messages output
 
 
 0.2 (2013-01-27)
@@ -13,3 +14,9 @@ Changelog
 * Added python 3 support (Roman Gladkov)
 * Internal refactoring
 * Added tests
+
+
+0.1 (2012-04-24)
+^^^^^^^^^^^^^^^^
+* Initial release
+
