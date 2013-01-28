@@ -4,7 +4,8 @@ django-future-url
 .. image:: https://travis-ci.org/futurecolors/django-future-url.png?branch=master
         :target: https://travis-ci.org/futurecolors/django-future-url
 
-Migration tool for old style “url” tags.
+Migration tool for old style “url” tags in Django 1.3 & 1.4.
+Support for Django 1.5 in next version.
 `“In Django 1.5, the behavior of the url template tag will change”`_
 
 If you use old style url tags in django 1.4 you will see that:
@@ -38,7 +39,7 @@ Usage
 ::
 
     $ cd ~/projects/my_django_14_project/
-    $ future_url --verbose
+    $ future_url
 
 It will show needed midification for all templates in directory
 “~/projects/my\_django\_14\_project/” and subdirectories.::
@@ -56,7 +57,6 @@ Only shows changes to be made without actually modifying files::
 
     $ future_url
 
-Verbose output: ``$ future_url --verbose``
 
 Example
 -------
@@ -88,4 +88,4 @@ Example
 Tests
 -----
 
-Install ``cram`` and run ``python setup.py test``
+Install ``python setup.py test`` and ``cram django_future_url/test/cram``

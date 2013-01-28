@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.2 (2013-01-28)
+^^^^^^^^^^^^^^^^^^
+* Clarification for README
+
+
 0.2.1 (2013-01-28)
 ^^^^^^^^^^^^^^^^^^
 * Fixed setup.py to properly define runner
