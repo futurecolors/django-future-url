@@ -33,10 +33,3 @@ class SimpleTest(ModernizeUrlTagTestCase):
 
     def test_should_not_be_upgraded(self):
         self.assertTemplateFixed('should_not_be_upgraded')
-
-
-class IntegrationTest(unittest.TestCase):
-
-    def test_cram(self):
-        base = os.path.abspath(os.path.dirname(__file__))
-        self.assertEqual(0, subprocess.call(['cram', os.path.join(base, 'cram')]))

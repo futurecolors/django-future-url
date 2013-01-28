@@ -6,5 +6,7 @@ python:
   - '3.3'
 install:
   - python setup.py -q install
-script: python setup.py test
+script:
+  - python setup.py test
+  - cram django_future_url/test/cram
 
