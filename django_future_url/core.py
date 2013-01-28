@@ -113,7 +113,7 @@ def parse_file(file_content):
         # Check if load url form future is present and add if necessary
         if r_url_finder.search(file_content) and not r_load_finder.search(file_content):
             file_content = process_load_tag(file_content)
-            log.debug("Added {% load url from future %}")
+            log.debug("Need to add {% load url from future %}")
 
     return file_content
 
@@ -125,7 +125,7 @@ def url_replacer(match):
     if ',' in match.group('attrs'):
         matches['attrs'] = re.sub('\s*,\s*', ' ', match.group('attrs'))
     repl = "{before}'{name}'{attrs}{after}".format(**matches)
-    logging.debug("replaced: {0} -> {1}".format(match.group(0), repl))
+    logging.debug("Proposed replace: {0} -> {1}".format(match.group(0), repl))
     return repl
 
 
