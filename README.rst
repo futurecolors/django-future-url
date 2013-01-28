@@ -12,6 +12,12 @@ If you use old style url tags in django 1.4 you will see that:
 Load the ``url`` tag from the ``future`` tag library to start using the
 new behavior.”
 
+The new library also drops support for the comma syntax
+for separating arguments to the url template tag.
+
+In Django 1.5, the old behavior will be replaced with the behavior
+provided by the future tag library. Existing templates be migrated to use the new syntax.
+
 .. _“In Django 1.5, the behavior of the url template tag will change”: https://docs.djangoproject.com/en/1.4/ref/templates/builtins/#url
 
 How it works

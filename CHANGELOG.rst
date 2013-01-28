@@ -4,7 +4,8 @@ Changelog
 0.2.1 (2013-01-28)
 ^^^^^^^^^^^^^^^^^^
 * Fixed setup.py to properly define runner
-* Improved messages output
+* Added even more tests
+* Improved output
 
 
 0.2 (2013-01-27)

@@ -81,15 +81,19 @@ def make_me_magic(write):
     # Search for files with appropriate extensions.
     for file_path in find_files(os.walk(CURRENT_PATH)):
         with open(file_path, 'r+') as t_file:
-            log.info(file_path.replace(CURRENT_PATH + '/', ''))
             file_content = t_file.read()
-            new_content = parse_file(file_content)
-            if new_content != file_content and write:
-                t_file.seek(0)
-                t_file.write(new_content)
-                log.info("File updated")
-            log.debug('\n')
-    log.info('Finished')
+            # Checking for presence of old-style tags and absence of load url from future
+            if has_deprecated_tag(file_content):
+                log.info(file_path.replace(CURRENT_PATH + '/', ''))
+                new_content = parse_file(file_content)
+
+                if write:
+                    t_file.seek(0)
+                    t_file.write(new_content)
+                    log.info("    File updated")
+
+    if not write:
+        log.info("No actual changes made")
 
 
 def find_files(paths):
@@ -99,21 +103,19 @@ def find_files(paths):
 
 
 def parse_file(file_content):
-    # Checking for presence of old-style tags and absence of load url from future
-    if has_deprecated_tag(file_content):
-        # print t_file.name
+    if not has_deprecated_tag(file_content):
+        return file_content
 
-        # Handle files with deprecated url tags
-        if r_depr_url_finder.search(file_content):
-            # Comma separated attributes are no longer supported in load from future
-            if check_comma_in_attributes(file_content):
-                log.info("Comma separated attributes in “future” url tag are not supported.")
-            file_content = process_url_tag(file_content)
+    # Handle files with deprecated url tags
+    if r_depr_url_finder.search(file_content):
+        if check_comma_in_attributes(file_content):
+            log.warn("    Comma separated attributes in url tag are no longer supported.")
+        file_content = process_url_tag(file_content)
 
-        # Check if load url form future is present and add if necessary
-        if r_url_finder.search(file_content) and not r_load_finder.search(file_content):
-            file_content = process_load_tag(file_content)
-            log.debug("Need to add {% load url from future %}")
+    # Check if load url form future is present and add if necessary
+    if r_url_finder.search(file_content) and not r_load_finder.search(file_content):
+        file_content = process_load_tag(file_content)
+        log.debug("    Need to add {% load url from future %}")
 
     return file_content
 
@@ -125,7 +127,7 @@ def url_replacer(match):
     if ',' in match.group('attrs'):
         matches['attrs'] = re.sub('\s*,\s*', ' ', match.group('attrs'))
     repl = "{before}'{name}'{attrs}{after}".format(**matches)
-    logging.debug("Proposed replace: {0} -> {1}".format(match.group(0), repl))
+    logging.debug("    Proposed replace: {0} -> {1}".format(match.group(0), repl))
     return repl
 
 
@@ -148,7 +150,7 @@ def process_url_tag(html):
 
 
 def check_comma_in_attributes(html):
-    """ Attributes of load tag can't be separated by comma. """
+    """ Attributes of url tag can't be separated by comma. """
 
     search = r_url_pattern.search(html)
     return ',' in search.group('attrs')
