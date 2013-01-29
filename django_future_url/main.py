@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Django future url.
 
@@ -26,7 +25,7 @@ import django_future_url
 from django_future_url.core import make_me_magic
 
 
-if __name__ == '__main__':
+def future_url():
     arguments = docopt(__doc__, version='Django future url ' + django_future_url.__version__)
 
     # Set up logging handler

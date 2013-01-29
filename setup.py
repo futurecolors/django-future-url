@@ -18,7 +18,11 @@ setup(
     long_description=read(os.path.join(os.path.dirname(__file__), 'README.rst')),
     license='MIT',
     install_requires=['docopt'],
-    scripts=['django_future_url/bin/future_url'],
+    entry_points = {
+       'console_scripts': [
+           'future_url = django_future_url.main:future_url',
+       ],
+    },
     tests_require=['cram==0.5'],
     test_suite='django_future_url.test',
     classifiers=[
