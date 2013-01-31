@@ -1,6 +1,10 @@
 Initial setup:
 
-  $ alias future_url="$TESTDIR/../../bin/future_url"
+  $ [ -n "$PYTHON" ] || PYTHON="`which python`"
+  $ export PYTHONPATH=$TMPDIR
+  $ cd ${TESTDIR}/../../../
+  $ $PYTHON setup.py develop --install-dir=$TMPDIR > /dev/null 2>&1
+  $ alias future_url="$TMPDIR/future_url"
   $ cp -R $TESTDIR/../test_project $TMPDIR/test_project
 
 Test --write behavior:
