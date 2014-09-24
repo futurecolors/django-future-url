@@ -32,15 +32,18 @@ https://docs.djangoproject.com/en/1.4/ref/templates/builtins/#url
 """
 from __future__ import unicode_literals
 
-import re
-import os
+import codecs
 import logging
+import os
+import re
 
 log = logging.getLogger(__name__)
 
 CURRENT_PATH = os.path.abspath('.')
 load_tag = "{% load url from future %}"
 file_formats = ['.html', '.txt']
+
+default_encoding = 'utf8'
 
 re_flags = re.I | re.X | re.U
 
@@ -73,7 +76,7 @@ r_load_extends_pattern = re.compile(
 r_load_extends_replace = """\g<template_head>\n\n%s\n""" % load_tag
 
 
-def make_me_magic(write):
+def make_me_magic(write, encoding=default_encoding):
     """ Main script.
 
     Here we find templates, replace old-style url tags and add future import where necessary.
@@ -82,7 +85,7 @@ def make_me_magic(write):
     log.info('Files needing modification:')
     found = False
     for file_path in find_files(os.walk(CURRENT_PATH)):
-        with open(file_path, 'r+') as t_file:
+        with codecs.open(file_path, 'r+', encoding=encoding) as t_file:
             file_content = t_file.read()
             # Checking for presence of old-style tags and absence of load url from future
             if has_deprecated_tag(file_content):
@@ -100,7 +103,6 @@ def make_me_magic(write):
     else:
         if not write:
             log.info('No actual changes made. Run future_url --write to fix files right now.')
-
 
 
 def find_files(paths):

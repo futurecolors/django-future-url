@@ -16,6 +16,7 @@ Options:
   -w --write    Actually make replacements.
   -q --quiet    Do not print anything to stdout.
   -h --help     Show this screen.
+  -e ENCODING   Specifies the file encoding [default: utf8]
   --version     Show version.
 """
 import logging
@@ -32,4 +33,4 @@ def future_url():
     level = logging.CRITICAL if arguments['--quiet'] else logging.INFO
     logging.basicConfig(format='%(message)s', level=level)
 
-    make_me_magic(write=arguments['--write'])
+    make_me_magic(write=arguments['--write'], encoding=arguments['-e'])
